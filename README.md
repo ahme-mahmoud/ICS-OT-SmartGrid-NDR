@@ -75,7 +75,7 @@ POST /predict
 }
 ```
 ## Example Output
-
+```
 {
   "attack": "UNKNOWN",
   "group": "UNKNOWN_THREAT",
@@ -85,7 +85,7 @@ POST /predict
   "detected_by": "Autoencoder",
   "action": "Isolate + investigate"
 }
-
+```
 ## Detection Logic
 
 XGBoost: Known attack detection  
