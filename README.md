@@ -1,39 +1,107 @@
 # ICS-OT Smart Grid Network Detection & Response (AI-Based)
 
 ## Overview
+This project implements a Network Detection and Response (NDR) system designed for Industrial Control Systems (ICS/OT) in Smart Grid environments.
 
-This project presents a real-time AI-based Network Detection and
-Response (NDR) system designed for Industrial Control Systems (ICS/OT)
-in Smart Grid (electrical power systems) environments.
-
-The system analyzes industrial network traffic, detects anomalies,
-classifies cyber attacks, and generates alerts to simulate protection of
-electrical substations and power infrastructure.
-
-------------------------------------------------------------------------
+The system analyzes industrial network traffic, detects anomalies, classifies cyber attacks, and simulates response actions to protect electrical infrastructure such as substations and power systems.
 
 ## Objectives
 
--   Detect abnormal behavior in industrial power networks\
--   Classify cyber attacks (DoS, scanning, flooding, etc.)\
--   Support real-time monitoring and alerting\
--   Generalize across multiple industrial vendors (ABB, Siemens,
-    Schneider)
-
-------------------------------------------------------------------------
+- Detect abnormal behavior in industrial network traffic  
+- Classify cyber attacks (DoS, scanning, flooding, etc.)  
+- Support real-time monitoring and alerting  
+- Generalize detection across multiple industrial vendors (ABB, Siemens, Schneider)  
 
 ## Key Features
 
--   Real-time traffic analysis (simulated streaming)\
--   AI-based anomaly detection\
--   Multi-class attack classification\
--   Multi-vendor dataset support\
--   Alerting and response simulation\
--   Interactive dashboard (Streamlit)
+- Real-time traffic analysis (simulated streaming)  
+- AI-based detection:
+  - XGBoost for known attack classification  
+  - Autoencoder for anomaly and zero-day detection  
+- Severity classification (LOW, MEDIUM, HIGH, CRITICAL)  
+- Attack grouping (Flood, Scan, Exploit, etc.)  
+- Structured logging (SOC-style)  
+- Response simulation (block, alert, log)  
+- REST API using FastAPI  
+- Ready for frontend or dashboard integration  
+
+## Project Structure
+
+NDR_Project/
+
+api/  
+engine/  
+models/  
+preprocessing/  
+config/  
+utils/  
+
+requirements.txt  
+README.md  
+
+## Installation
+
+pip install -r requirements.txt
+
+## Running the System
+
+uvicorn api.api:app --host 0.0.0.0 --port 8000
+
+Open in browser:
+http://127.0.0.1:8000/docs
+
+## API Usage
+
+POST /predict
+
+## Example Input
+
+{
+  "duration": 0.5,
+  "sPackets": 100,
+  "rPackets": 5,
+  "sBytesSum": 15000,
+  "rBytesSum": 300,
+  "sLoad": 240000,
+  "rLoad": 4800,
+  "sSynRate": 0.0,
+  "sAckRate": 1.0,
+  "sFinRate": 0.0,
+  "sRstRate": 0.0,
+  "sPayloadAvg": 150,
+  "rPayloadAvg": 60,
+  "protocol": "tcp",
+  "sAddress": "192.168.1.10"
+}
+
+## Example Output
+
+{
+  "attack": "UNKNOWN",
+  "group": "UNKNOWN_THREAT",
+  "severity": "HIGH",
+  "confidence": 98.4,
+  "recon_error": 35.2,
+  "detected_by": "Autoencoder",
+  "action": "Isolate + investigate"
+}
+
+## Detection Logic
+
+XGBoost: Known attack detection  
+Autoencoder: Anomaly and zero-day detection  
+
 
 ------------------------------------------------------------------------
 
 ## Datasets
+
+##
+
+Layer 1: Core  
+Layer 2: Diversity  
+Layer 3: Cross-vendor  
+
 
 ```
 
@@ -54,8 +122,6 @@ Datasets/
 │   └── Siemens_pingofdeath_0710-.csv
 
 ```
-
-
 ------------------------------------------------------------------------
 
 ### Layer 1: Core Dataset (Real Industrial Traffic)
@@ -112,46 +178,3 @@ Purpose:
 -   Ensures the system is not vendor-dependent
 
 ------------------------------------------------------------------------
-
-## Training Strategy
-
--   Training Data: Layer 1 + Layer 2 (ABB datasets only)\
--   Testing Data: Layer 3 (Siemens and Schneider datasets)
-
-Key Insight:
-
--   The model is trained on a single vendor (ABB)\
--   It is evaluated on different vendors to test generalization\
--   This simulates real-world deployment in heterogeneous industrial
-    environments
-
-------------------------------------------------------------------------
-
-## System Workflow (Real-Time)
-
-1.  Network traffic is captured (CSV stream, Zeek, or PCAP)\
-2.  Features are extracted from traffic\
-3.  Data is passed to the trained ML model\
-4.  The model predicts:
-    -   BENIGN\
-    -   ATTACK (with type)\
-5.  Alerts are generated and displayed
-
-------------------------------------------------------------------------
-
-## Final Objective
-
-Build an AI-based ICS/OT NDR system capable of:
-
--   Detecting anomalies in industrial power networks (Smart Grid)\
--   Classifying multiple attack types\
--   Operating in real-time environments\
--   Generalizing across different ICS vendors (ABB, Siemens, Schneider)
-
-------------------------------------------------------------------------
-
-## Summary
-
--   Layer 1: Core attack (TCP Flood)\
--   Layer 2: Attack diversity (behavior coverage)\
--   Layer 3: Cross-vendor validation
