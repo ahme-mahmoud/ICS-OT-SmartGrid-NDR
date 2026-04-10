@@ -28,14 +28,14 @@ The system analyzes industrial network traffic, detects anomalies, classifies cy
 ## Project Structure
 
 NDR_Project/
-
+```
 api/  
 engine/  
 models/  
 preprocessing/  
 config/  
 utils/  
-
+```
 requirements.txt  
 README.md  
 
@@ -55,7 +55,7 @@ http://127.0.0.1:8000/docs
 POST /predict
 
 ## Example Input
-
+```
 {
   "duration": 0.5,
   "sPackets": 100,
@@ -73,7 +73,7 @@ POST /predict
   "protocol": "tcp",
   "sAddress": "192.168.1.10"
 }
-
+```
 ## Example Output
 
 {
