@@ -35,6 +35,28 @@ electrical substations and power infrastructure.
 
 ## Datasets
 
+
+Datasets/
+├── 01_core/
+│   └── ABB_LONG_tcpflood_faster_1_01-.csv
+│
+├── 02_diversity/
+│   ├── ABB_nmap_0715_.csv
+│   ├── ABB_pingofdeath_0715_.csv
+│   ├── ABB_portscan_0715.csv
+│   ├── ABB_smurf_faster_0715_01_.csv
+│   ├── ABB_teardrop_fast_0715.csv
+│   └── ABB_winNuke_faster_0715_part1.csv
+│
+├── 03_cross_vendor/
+│   ├── Schneider_portscan_0710.csv
+│   └── Siemens_pingofdeath_0710-.csv
+
+
+
+
+------------------------------------------------------------------------
+
 ### Layer 1: Core Dataset (Real Industrial Traffic)
 
 -   ABB_LONG_tcpflood_faster_1_01-.csv
