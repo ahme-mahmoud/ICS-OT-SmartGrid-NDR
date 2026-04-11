@@ -44,6 +44,28 @@ from feature_engineering import engineer_features
 
 
 # ═══════════════════════════════════════════════════════════════
+# PATH CONFIGURATION
+# ═══════════════════════════════════════════════════════════════
+
+# Resolves to NDR_Project/ regardless of where the process is launched
+# (terminal, uvicorn, Docker, pytest, etc.)
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+_PATHS = {
+    # models/
+    "xgb_model":          BASE_DIR / "models"        / "xgboost_model.pkl",
+    "autoencoder_model":  BASE_DIR / "models"        / "autoencoder_model.keras",
+    # preprocessing/
+    "label_encoder":      BASE_DIR / "preprocessing" / "label_encoder.pkl",
+    "xgb_features":       BASE_DIR / "preprocessing" / "xgb_features.pkl",
+    "ae_scaler":          BASE_DIR / "preprocessing" / "autoencoder_scaler.pkl",
+    "ae_features":        BASE_DIR / "preprocessing" / "autoencoder_features.pkl",
+    # config/
+    "ae_thresholds":      BASE_DIR / "config"        / "autoencoder_thresholds.json",
+}
+
+
+# ═══════════════════════════════════════════════════════════════
 # ATTACK INTELLIGENCE REGISTRY
 # ═══════════════════════════════════════════════════════════════
 
@@ -235,9 +257,9 @@ class NDREngine:
 
         # ── XGBoost ──
         try:
-            self.xgb_model = joblib.load("xgboost_ndr_model.pkl")
-            self.le        = joblib.load("label_encoder.pkl")
-            self.xgb_feats = joblib.load("xgb_features.pkl")
+            self.xgb_model = joblib.load(_PATHS["xgb_model"])
+            self.le        = joblib.load(_PATHS["label_encoder"])
+            self.xgb_feats = joblib.load(_PATHS["xgb_features"])
             print(f"✅ XGBoost loaded     — {len(self.xgb_feats)} features")
         except FileNotFoundError as e:
             raise RuntimeError(f"XGBoost model files missing: {e}") from e
@@ -245,17 +267,17 @@ class NDREngine:
         # ── Autoencoder ──
         try:
             self.autoencoder = keras.models.load_model(
-                "autoencoder_model.keras", compile=False
+                _PATHS["autoencoder_model"], compile=False
             )
-            self.ae_scaler = joblib.load("autoencoder_scaler.pkl")
-            self.ae_feats  = joblib.load("autoencoder_features.pkl")
+            self.ae_scaler = joblib.load(_PATHS["ae_scaler"])
+            self.ae_feats  = joblib.load(_PATHS["ae_features"])
             print(f"✅ Autoencoder loaded — {len(self.ae_feats)} features")
         except FileNotFoundError as e:
             raise RuntimeError(f"Autoencoder files missing: {e}") from e
 
         # ── Thresholds ──
         try:
-            with open("autoencoder_thresholds.json") as f:
+            with open(_PATHS["ae_thresholds"]) as f:
                 t = json.load(f)
             self.ae_threshold = t["threshold_optimal"]
             self.ae_clip      = t.get("clip_range", [-10, 10])
