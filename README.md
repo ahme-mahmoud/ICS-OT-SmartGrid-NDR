@@ -229,3 +229,7 @@ Datasets/
 - API integrated and documented
 - Full detection pipeline implemented
 - Cross-vendor tested (ABB, Siemens, Schneider)
+
+## Installation
+
+See the project files for setup instructions.
